@@ -1,9 +1,19 @@
+import os
 from pathlib import Path
 import pandas as pd
 from fastai.vision import get_transforms, imagenet_stats, SegmentationItemList
 
 
 CODES = ['void', 'water']
+
+
+def get_scans(data_path):
+    for root, dirs, files in os.walk(data_path):
+        if 'CT' in root:
+            for _file in files:
+                scans.append(root + '/' + _file)
+
+    return sorted(scans)
 
 
 def get_y_fn(path):
