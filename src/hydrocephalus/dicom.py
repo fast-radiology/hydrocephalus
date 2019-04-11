@@ -27,3 +27,7 @@ def open_dcm_mask(fn, *args, **kwargs) -> Image:
     x = pydicom.dcmread(fn).pixel_array
     x = pil2tensor(x, np.float32)
     return ImageSegment(x)
+
+
+def get_shape(filename):
+    return np.array(pydicom.dcmread(filename).pixel_array.shape)

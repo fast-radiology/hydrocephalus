@@ -52,3 +52,23 @@ def get_examination_spacing(scans):
     )
     spacing = np.array([thickness] + list(scan.PixelSpacing), dtype=np.float32)
     return spacing
+
+
+def get_result(preds, true, scans, metrics, split, examination):
+    result = {'split': split, 'examination': examination}
+    for metric in metrics:
+        result[metric.__name__] = metric(preds, true).item()
+
+    spacing = get_examination_spacing(scans)
+    result['preds_volume'] = get_volume(preds, spacing)
+    result['true_volume'] = get_volume(true, spacing)
+
+    if {'tp', 'fp', 'fn'}.issubset(set(map(lambda f: f.__name__, metrics))):
+        tp = result['tp']
+        fp = result['fp']
+        fn = result['fn']
+
+        result['precision'] = tp / float(tp + fp)
+        result['recall'] = tp / float(tp + fn)
+        result['volumetric_similarity'] = 1 - abs(fn - fp) / float(2 * tp + fp + fn)
+    return result
