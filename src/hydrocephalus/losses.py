@@ -4,6 +4,8 @@ from torch.nn.modules.loss import _Loss
 
 from fastai.layers import FlattenedLoss
 
+USE_GPU = torch.cuda.is_available()
+
 
 class GeneralizedDiceLoss(_Loss):
     # reference: https://niftynet.readthedocs.io/en/dev/_modules/niftynet/layer/loss_segmentation.html#generalised_dice_loss
@@ -13,7 +15,11 @@ class GeneralizedDiceLoss(_Loss):
 
     def forward(self, input, target):
         prediction = self.softmax(input)
-        one_hot = torch.sparse.torch.eye(2).cuda().index_select(0, target.long())
+
+        if USE_GPU:
+            one_hot = torch.sparse.torch.eye(2).cuda().index_select(0, target.long())
+        else:
+            one_hot = torch.sparse.torch.eye(2).index_select(0, target.long())
 
         ref_vol = torch.sum(one_hot, 0)
 

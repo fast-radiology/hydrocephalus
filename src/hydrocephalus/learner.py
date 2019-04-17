@@ -1,9 +1,9 @@
 from fastai.vision import unet_learner, models
 
-from hydrocephalus.losses import generalized_dice_loss
+from hydrocephalus.losses import generalized_dice_loss, USE_GPU
 
 
-def get_learner(data, metrics=None, model_dir='models', engine='GPU'):
+def get_learner(data, metrics=None, model_dir='models'):
     if metrics is None:
         metrics = []
 
@@ -16,6 +16,6 @@ def get_learner(data, metrics=None, model_dir='models', engine='GPU'):
         wd=1e-7,
         model_dir=model_dir,
     )
-    if engine == "GPU":
+    if USE_GPU:
         return learner.to_fp16()
     return learner
