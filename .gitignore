@@ -108,6 +108,7 @@ models/*.pth
 
 # results
 results/*.csv
+results/*.pth
 
 # osx files
 .DS_Store
