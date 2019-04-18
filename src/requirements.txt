@@ -1,3 +1,4 @@
 pydicom==1.2.2
 fastai==1.0.47.post1
 opencv-python==4.0.0.21
+scikit-learn==0.20.3
