@@ -22,11 +22,14 @@ def get_y_fn(path):
     return str('.' / Path(path).parent / '../label' / Path(path).name)
 
 
-def get_data(scans, valid_func, bs, size):
+def get_data(scans, valid_func, bs, size, label_func=None):
+    if label_func is None:
+        label_func = get_y_fn
+
     return (
         SegmentationItemList.from_df(pd.DataFrame(scans, columns=['files']), '.')
         .split_by_valid_func(valid_func)
-        .label_from_func(get_y_fn, classes=CODES)
+        .label_from_func(label_func, classes=CODES)
         .transform(
             get_transforms(max_rotate=5.0, max_lighting=0, p_lighting=0, max_warp=0),
             size=size,
